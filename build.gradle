@@ -1,6 +1,9 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
 buildscript {
     repositories {
         mavenLocal()
+        mavenCentral()
         jcenter()
     }
     dependencies {
@@ -8,25 +11,77 @@ buildscript {
     }
 }
 
+ext {
+    // The drivers we want to use
+    drivers = ["firefox", "chrome", "phantomJs"]
+}
+
 // In this section you declare where to find the dependencies of your project
 repositories {
     mavenLocal()
+    mavenCentral()
     jcenter()
 }
 
 // Apply plugins to add support for ...
+apply from: 'gradle/osSpecificDownloads.gradle'
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'net.serenity-bdd.aggregator'
 
 dependencies {
-    testCompile('net.serenity-bdd:serenity-core:1.1.37-rc8')
-    testCompile('net.serenity-bdd:serenity-junit:1.1.36')
-    testCompile('junit:junit:4.12')
-    testCompile('net.serenity-bdd:serenity-cucumber:1.1.10')
-    testCompile('org.assertj:assertj-core:3.5.2')
-    testCompile('org.slf4j:slf4j-simple:1.7.21')
+    testCompile("net.serenity-bdd:serenity-core:$serenitycoreVersion")
+    testCompile("net.serenity-bdd:serenity-junit:$serenityjunitVersion")
+    testCompile("junit:junit:$junitVersion")
+    testCompile("net.serenity-bdd:serenity-cucumber:$serenitycucumberVersion")
+    testCompile("org.assertj:assertj-core:$assertjcoreVersion")
+    testCompile("org.slf4j:slf4j-simple:$slf4jsimpleVersion")
     // compile('org.slf4j:slf4j-api:1.7.21')
+
+    // Drivers
+    // testCompile "org.seleniumhq.selenium:selenium-chrome-driver:$seleniumVersion"
+    // testCompile "org.seleniumhq.selenium:selenium-firefox-driver:$seleniumVersion"
+    // using a custom version of phantomjs driver for now as the original one does not support WebDriver > 2.43.1
+    testCompile("com.codeborne:phantomjsdriver:$phantomjsdriverVersion") {
+        // phantomjs driver pulls in a different selenium version
+        transitive = false
+    }
 }
 gradle.startParameter.continueOnFailure = true
+
+drivers.each { driver ->
+    task "${driver}Test"(type: Test) {
+        reports {
+            html.destination = reporting.file("$name/tests")
+            junitXml.destination = file("$buildDir/test-results/$name")
+        }
+
+        outputs.upToDateWhen { false }  // Always run tests
+
+        // systemProperty "geb.build.reportsDir", reporting.file("$name/geb")
+        // systemProperty "geb.env", driver
+
+        // If you wanted to set the baseUrl in your build…
+        // systemProperty "geb.build.baseUrl", "http://myapp.com"
+    }
+}
+
+chromeTest {
+    dependsOn unzipChromeDriver
+
+    def chromedriverFilename = Os.isFamily(Os.FAMILY_WINDOWS) ? "chromedriver.exe" : "chromedriver"
+    systemProperty "webdriver.chrome.driver", new File(unzipChromeDriver.outputs.files.singleFile, chromedriverFilename).absolutePath
+}
+
+phantomJsTest {
+    dependsOn unzipPhantomJs
+
+    def phantomJsFilename = Os.isFamily(Os.FAMILY_WINDOWS) ? "phantomjs.exe" : "bin/phantomjs"
+    systemProperty "phantomjs.binary.path", new File(unzipPhantomJs.outputs.files.singleFile, phantomJsFilename).absolutePath
+}
+
+test {
+    dependsOn drivers.collect { tasks["${it}Test"] }
+    enabled = false
+}
