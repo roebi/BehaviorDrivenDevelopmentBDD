@@ -21,7 +21,7 @@ apply plugin: 'idea'
 apply plugin: 'net.serenity-bdd.aggregator'
 
 dependencies {
-    testCompile('net.serenity-bdd:serenity-core:1.1.36')
+    testCompile('net.serenity-bdd:serenity-core:1.1.37-rc8')
     testCompile('net.serenity-bdd:serenity-junit:1.1.36')
     testCompile('junit:junit:4.12')
     testCompile('net.serenity-bdd:serenity-cucumber:1.1.10')
