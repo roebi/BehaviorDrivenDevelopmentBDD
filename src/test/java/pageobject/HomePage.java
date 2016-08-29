@@ -11,7 +11,7 @@ import org.openqa.selenium.support.FindBy;
 @DefaultUrl("http://www.etsy.com")
 public class HomePage extends PageObject {
 
-    @FindBy(css = "button[value='Search']")
+    @FindBy(css = "#search-bar button")
     WebElement searchButton;
 
     public void searchFor(String keywords) {
