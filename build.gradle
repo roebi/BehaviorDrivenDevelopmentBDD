@@ -36,7 +36,7 @@ dependencies {
     testCompile("junit:junit:$junitVersion")
     testCompile("net.serenity-bdd:serenity-cucumber:$serenitycucumberVersion")
     testCompile("org.assertj:assertj-core:$assertjcoreVersion")
-    testCompile("org.slf4j:slf4j-simple:$slf4jsimpleVersion")
+    // testCompile("org.slf4j:slf4j-simple:$slf4jsimpleVersion")
     // compile('org.slf4j:slf4j-api:1.7.21')
 
     // Drivers
