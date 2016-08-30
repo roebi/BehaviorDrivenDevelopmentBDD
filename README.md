@@ -16,6 +16,10 @@ Project Setup with
 
 is in folder `target\site\serenity` as HTML Report - open index.html
 
+## Gradle JUnit Testreport
+
+is in Folder `build\reports\chromeTest\tests` as HTML Report - open index.html
+
 ## Serenity BDD References
 
 [An Introduction to BDD Test Automation with Serenity and Cucumber-JVM](http://thucydides.info/docs/articles/an-introduction-to-serenity-bdd-with-cucumber.html)
