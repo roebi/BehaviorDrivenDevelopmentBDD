@@ -2,7 +2,8 @@
 
 Project Setup with
 
-- Gradle with test tasks for "chrome", "phantomJs", "firefox" (only "chrome" works on Windows 10)
+- Gradle
+- with test tasks for "chrome", "phantomJs", "firefox" (only "chrome" works on Windows 10 ?) from [Geb Example Gradle](https://github.com/geb/geb-example-gradle/blob/master/build.gradle)
 - Cucumber with [Gherkin Language (Feature / Scenario / Given / When / Then) .feature Files](https://github.com/cucumber/cucumber/wiki/Gherkin)
 - Serenity BDD (previously known as Thucydides)
 - AssertJ - Fluent Assertions for Java
